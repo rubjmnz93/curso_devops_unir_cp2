@@ -1,2 +1,21 @@
----
-# tasks file for acr
+- name: Pull nginx latest image
+  containers.podman.podman_image:
+    name: "{{ source_image }}"
+    state: present
+
+- name: Tag image with new tag
+  containers.podman.podman_tag:
+    image: "{{ source_image }}"
+    target_names:
+      - "{{ acr_login_server }}/nginx:{{ new_tag }}"
+
+- name: Login to Azure Container Registry
+  containers.podman.podman_login:
+    registry:  "{{ acr_login_server }}"
+    username: "{{ acr_name }}"
+    password: "{{ acr_password }}"
+
+- name: Push image to ACR
+  containers.podman.podman_image:
+    name: "{{ acr_login_server }}/nginx:{{ new_tag }}"
+    push: true

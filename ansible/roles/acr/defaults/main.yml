@@ -1,2 +1,4 @@
----
-# defaults file for acr
+acr_login_server: "{{ acr_name }}.azurecr.io"
+
+source_image: docker.io/nginx:latest
+new_tag: cp2

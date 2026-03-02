@@ -1,0 +1,5 @@
+- name: Push image to ACR
+  hosts: acr
+  roles:
+    - acr
+  
