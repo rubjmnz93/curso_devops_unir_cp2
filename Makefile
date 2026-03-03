@@ -1,9 +1,16 @@
 .PHONY: get-key
 
+
 help:
-	@echo "Available Makefile tasks:"
-	@echo "	get-key-tf 	-> Extracts the private key from Terraform and saves it to ssh/id_rsa"
-	@echo "	help		-> Shows this help message"
+	@echo "Available commands:"
+	@echo ""
+	@echo "  set-azure-account-id       -> Set the current Azure subscription ID into terraform/terraform.tfvars"
+	@echo "  tf-deploy                  -> Deploy infrastructure using Terraform"
+	@echo "  tf-destroy                 -> Destroy infrastructure using Terraform"
+	@echo "  get-key-tf                 -> Extract private key from Terraform outputs and save to ssh/id_rsa"
+	@echo "  connect-ssh-vm             -> SSH into the VM using the private key from get-key-tf"
+	@echo "  run-ansible-playbook       -> Run Ansible playbook to configure resources"
+	@echo "  test-vm-nginx              -> Test Nginx in VM by printing the URL and doing a curl request"
 
 set-azure-account-id:
 	@echo "subscription_id = \"$$(az account show --query id -o tsv)\"" > terraform/terraform.tfvars
