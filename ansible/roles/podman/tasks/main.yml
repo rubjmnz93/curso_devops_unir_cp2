@@ -1,2 +1,30 @@
----
-# tasks file for podman
+- name: Install Podman packages
+  apt:
+    name: "{{ podman_packages }}"
+    state: present
+    update_cache: yes
+
+- name: Ensure Podman service is enabled (socket)
+  systemd:
+    name: podman.socket
+    state: started
+    enabled: yes
+
+- name: Login to Azure Container Registry
+  containers.podman.podman_login:
+    registry:  "{{ acr_login_server }}"
+    username: "{{ acr_name }}"
+    password: "{{ acr_password }}"
+
+- name: Pull container image
+  containers.podman.podman_image:
+    name: "{{ acr_login_server }}/{{ container_image }}"
+
+- name: Run container
+  containers.podman.podman_container:
+    name: "{{ container_name }}"
+    image: "{{ container_image }}"
+    state: started
+    ports:
+      - "{{ container_port }}:80"
+    restart_policy: always

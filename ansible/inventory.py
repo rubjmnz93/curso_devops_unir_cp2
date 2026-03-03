@@ -11,13 +11,10 @@ def get_inventory():
 
     ip = tf["vm_ip"]["value"]
     user = tf["vm_username"]["value"]
-    private_key = tf["vm_private_key"]["value"]
     acr_name = tf["acr_name"]["value"]
     acr_password = tf["acr_password"]["value"]
 
     key_path = "../ssh/id_rsa"
-    with open(key_path, "w") as f:
-        f.write(private_key)
 
     inventory = {
         "vm": {
@@ -31,12 +28,12 @@ def get_inventory():
             "hosts": ["localhost"],
             "vars": {
                 "ansible_connection": "local",
-                "acr_password": acr_password
             }
         },
         "all": {
             "vars": {
-                "acr_name": acr_name
+                "acr_name": acr_name,
+                "acr_password": acr_password
             }
         },
         "_meta": {

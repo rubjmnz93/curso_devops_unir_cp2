@@ -19,3 +19,19 @@ get-key-tf:
 	cd terraform && terraform output -raw vm_private_key > ../ssh/id_rsa
 	@chmod 600 ssh/id_rsa
 	@echo "Private key saved in ssh/id_rsa"
+
+connect-ssh-vm: get-key-tf
+	cd terraform && \
+	vm_username=$$(terraform output -raw vm_username) && \
+	vm_ip=$$(terraform output -raw vm_ip) && \
+	ssh -i ../ssh/id_rsa $${vm_username}@$${vm_ip}
+
+run-ansible-playbook: get-key-tf
+	cd ansible && \
+	ansible-playbook playbook.yml
+
+test-vm-nginx:
+	cd terraform && \
+	vm_ip=$$(terraform output -raw vm_ip) && \
+	echo "Nginx in VM: http://$${vm_ip}:8080/" && \
+	curl http://$${vm_ip}:8080/
