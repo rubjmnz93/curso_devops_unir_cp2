@@ -1,3 +1,7 @@
+- name: Update repositories
+  apt:
+    update_cache: yes
+
 - name: Install Podman packages
   apt:
     name: "{{ podman_packages }}"
@@ -16,9 +20,15 @@
     username: "{{ acr_name }}"
     password: "{{ acr_password }}"
 
-- name: Pull container image
+- name: Pull container image from ACR
   containers.podman.podman_image:
     name: "{{ acr_login_server }}/{{ container_image }}"
+  
+- name: Create directory for volume
+  file:
+    path: /opt/{{ container_name }}
+    state: directory
+    mode: '0755'
 
 - name: Run container
   containers.podman.podman_container:
@@ -27,4 +37,6 @@
     state: started
     ports:
       - "{{ container_port }}:80"
+    volumes:
+      - "/opt/{{ container_name }}:/usr/share/nginx/html"
     restart_policy: always

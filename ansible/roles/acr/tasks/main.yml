@@ -1,13 +1,15 @@
-- name: Pull nginx latest image
+- name: Pull images
   containers.podman.podman_image:
-    name: "{{ source_image }}"
+    name: "{{ item.source }}"
     state: present
+  loop: "{{ images }}"
 
 - name: Tag image with new tag
   containers.podman.podman_tag:
-    image: "{{ source_image }}"
+    image: "{{ item.source }}"
     target_names:
-      - "{{ acr_login_server }}/nginx:{{ new_tag }}"
+      - "{{ acr_login_server }}/{{ item.name }}:{{ new_tag }}"
+  loop: "{{ images }}"
 
 - name: Login to Azure Container Registry
   containers.podman.podman_login:
@@ -17,5 +19,6 @@
 
 - name: Push image to ACR
   containers.podman.podman_image:
-    name: "{{ acr_login_server }}/nginx:{{ new_tag }}"
+    name: "{{ acr_login_server }}/{{ item.name }}:{{ new_tag }}"
     push: true
+  loop: "{{ images }}"

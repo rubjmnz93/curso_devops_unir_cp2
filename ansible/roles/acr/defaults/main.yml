@@ -1,4 +1,9 @@
-acr_login_server: "{{ acr_name }}.azurecr.io"
+images:
+  - name: nginx
+    source: docker.io/library/nginx:latest
+  - name: redis
+    source: docker.io/library/redis:latest
 
-source_image: docker.io/nginx:latest
+
+acr_login_server: "{{ acr_name }}.azurecr.io"
 new_tag: cp2

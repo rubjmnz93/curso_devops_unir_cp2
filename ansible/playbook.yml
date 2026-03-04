@@ -8,5 +8,5 @@
   become: yes
 
   roles:
-    - podman
+    - vm
   
