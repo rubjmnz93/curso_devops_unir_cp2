@@ -3,6 +3,5 @@ podman_packages:
   - podman-compose
 
 acr_login_server: "{{ acr_name }}.azurecr.io"
-container_name: nginx
-container_image: nginx:cp2
+image_name: nginx
 container_port: 8080

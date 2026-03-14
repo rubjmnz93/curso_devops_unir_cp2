@@ -30,14 +30,28 @@ def get_inventory():
                 "ansible_connection": "local",
             }
         },
+        "aks" : {
+            "hosts": ["localhost"],
+            "vars": {
+                "ansible_connection": "local",
+                "k8s_namespace": "casopractico2",
+                "kubeconfig_path": "../kubeconfig"
+            }
+        },
         "all": {
             "vars": {
                 "acr_name": acr_name,
-                "acr_password": acr_password
+                "acr_password": acr_password,
+                "acr_server": f"{acr_name}.azurecr.io",
+                "image_tag": "casopractico2"
             }
         },
         "_meta": {
-            "hostvars": {}
+            "hostvars": {
+                "localhost": {
+                    "ansible_python_interpreter": "../.venv/bin/python"
+                }
+            }
         }
     }
 

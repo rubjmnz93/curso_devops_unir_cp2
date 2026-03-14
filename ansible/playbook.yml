@@ -10,3 +10,7 @@
   roles:
     - vm
   
+- name: Deploy AKS
+  hosts: aks
+  roles:
+    - acr_secret

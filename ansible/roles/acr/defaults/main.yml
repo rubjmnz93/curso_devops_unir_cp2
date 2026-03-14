@@ -1,9 +1,7 @@
 images:
   - name: nginx
     source: docker.io/library/nginx:latest
-  - name: redis
-    source: docker.io/library/redis:latest
-
-
-acr_login_server: "{{ acr_name }}.azurecr.io"
-new_tag: cp2
+  - name: wordpress
+    source: docker.io/library/wordpress:latest
+  - name: mysql
+    source: docker.io/library/mysql:latest

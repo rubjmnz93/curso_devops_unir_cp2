@@ -8,17 +8,17 @@
   containers.podman.podman_tag:
     image: "{{ item.source }}"
     target_names:
-      - "{{ acr_login_server }}/{{ item.name }}:{{ new_tag }}"
+      - "{{ acr_server }}/{{ item.name }}:{{ image_tag }}"
   loop: "{{ images }}"
 
 - name: Login to Azure Container Registry
   containers.podman.podman_login:
-    registry:  "{{ acr_login_server }}"
+    registry:  "{{ acr_server }}"
     username: "{{ acr_name }}"
     password: "{{ acr_password }}"
 
 - name: Push image to ACR
   containers.podman.podman_image:
-    name: "{{ acr_login_server }}/{{ item.name }}:{{ new_tag }}"
+    name: "{{ acr_server }}/{{ item.name }}:{{ image_tag }}"
     push: true
   loop: "{{ images }}"
