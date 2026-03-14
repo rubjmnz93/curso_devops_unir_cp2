@@ -1,19 +1,30 @@
 - name: Create MySQL PVC
   kubernetes.core.k8s:
+    kubeconfig: "{{ kubeconfig_path }}"
     state: present
     definition: "{{ lookup('template', 'pvc.yml.j2') }}"
 
 - name: Create MySQL secret
   kubernetes.core.k8s:
+    kubeconfig: "{{ kubeconfig_path }}"
     state: present
     definition: "{{ lookup('template', 'secret.yml.j2') }}"
+    
+- name: Create MySQL configmap
+  kubernetes.core.k8s:
+    kubeconfig: "{{ kubeconfig_path }}"
+    state: present
+    definition: "{{ lookup('template', 'config.yml.j2') }}"
 
 - name: Create MySQL Deployment
   kubernetes.core.k8s:
+    kubeconfig: "{{ kubeconfig_path }}"
     state: present
     definition: "{{ lookup('template', 'deployment.yml.j2') }}"
 
 - name: Create MySQL Service
   kubernetes.core.k8s:
+    kubeconfig: "{{ kubeconfig_path }}"
     state: present
     definition: "{{ lookup('template', 'service.yml.j2') }}"
+    
