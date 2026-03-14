@@ -19,3 +19,8 @@ output "vm_private_key" {
   value     = tls_private_key.ssh_private_key.private_key_pem
   sensitive = true
 }
+
+resource "local_file" "kubeconfig" {
+  content  = azurerm_kubernetes_cluster.aks.kube_config_raw
+  filename = "${path.module}/../kubeconfig"
+}

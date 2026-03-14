@@ -45,3 +45,9 @@ terraform.rc
 
 # ssh keys
 ssh/*
+
+# Virtual env
+.venv/
+
+# AKS config
+*kubeconfig*
