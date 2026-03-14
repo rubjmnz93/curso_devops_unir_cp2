@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ container_name }}
+  namespace: {{ k8s_namespace }}
+
+spec:
+  replicas: {{ replicas }}
+
+  selector:
+    matchLabels:
+      app: {{ container_name }}
+
+  template:
+    metadata:
+      labels:
+        app: {{ container_name }}
+
+    spec:
+      imagePullSecrets:
+        - name: {{ acr_secret_name }}
+
+      containers:
+        - name: {{ container_name }}
+          image: {{ acr_server }}/{{ image_name }}:{{ image_tag }}
+
+          ports:
+            - containerPort: {{ container_port }}
+
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ mysql_secret_name }}
+                  key: MYSQL_ROOT_PASSWORD
+
+            - name: MYSQL_DATABASE
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ mysql_config_name }}
+                  key: MYSQL_DATABASE
+
+            - name: MYSQL_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ mysql_config_name }}
+                  key: MYSQL_USER
+
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ mysql_secret_name }}
+                  key: MYSQL_PASSWORD
+
+          volumeMounts:
+            - name: {{ volume_name }}
+              mountPath: {{ volume_mount_path }}
+
+      volumes:
+        - name: {{ volume_name }}
+          persistentVolumeClaim:
+            claimName: {{ pvc_name }}

@@ -51,3 +51,6 @@ ssh/*
 
 # AKS config
 *kubeconfig*
+
+# vaul pass
+*.vault_pass

@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ mysql_config_name }}
+  namespace: {{ k8s_namespace }}
+
+data:
+  MYSQL_DATABASE: {{ mysql_database }}
+  MYSQL_USER: {{ mysql_user }}
