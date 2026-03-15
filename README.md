@@ -9,6 +9,8 @@ La arquitectura se crea con **Terraform** y el despliegue servicios con **Ansibl
 
 Este repositorio corresponde al **Caso Práctico 2** del **Curso Avanzado de DevOps** de la **UNIR**.
 
+![Arquitectura de la solución](docs/images/architecture.png)
+
 ## 🧩 Tecnologías utilizadas
 
 - **Terraform** (infraestructura como código). Provisiona recursos en **Azure**.
