@@ -82,3 +82,41 @@ Pueden consultarse todos los atajos con
 ```bash
 make help
 ```
+
+## Resultados
+
+### Infraestructura de Azure
+
+Captura de los recursos desplegados en Azure con Terraform:
+
+![Recursos CP2 Azure](docs/images/azure_cp2_resources.png)
+
+Por limitaciones de la subscripción de estudiantes, los recusrsos se han desplegado en la región *Switzerland North*. Todos están dentro del grupo de recursos **cp-rg** y tienen el tag **environment=cp2**.
+
+### Nginx en Máquina Virtual
+![Nginx en Máquina Virtual](docs/images/vm_nginx.png)
+
+En los logs del despliegue se muestra la url para conectarse al Nginx de la máquina virtual. 
+También se puede obtener la IP con:
+```bash
+cd terraform
+terraform output vm_ip
+```
+y entrando en la URL:
+```
+http:\\<IP DE LA MAQUINA VIRTUAL>:8080
+```
+
+### WordPress en AKS
+![Nginx en Máquina Virtual](docs/images/vm_nginx.png)
+
+En los logs del despliegue se muestra la url para conectarse al WodPress en AKS a través del LoadBalancer. También se puede obtener la IP con:
+
+```bash
+az aks get-credentials --resource-group cp2-rg --name cp2-aks --overwrite-existing
+kubectl get svc wordpress -n casopractico2 -o jsonpath='{.status.loadBalancer.ingress[0].ip}'
+```
+y entrando en la URL:
+```
+http:\\<IP DEL LOAD BALANCER>:8080
+```
