@@ -21,7 +21,8 @@ def get_inventory():
             "hosts": [ip],
             "vars": {
                 "ansible_user": user,
-                "ansible_ssh_private_key_file": key_path
+                "ansible_ssh_private_key_file": key_path,
+                "vm_ip": ip,
             }
         },
         "acr" : {

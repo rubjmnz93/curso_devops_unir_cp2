@@ -31,25 +31,25 @@ spec:
             - name: MYSQL_ROOT_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ mysql_secret_name }}
+                  name: {{ secret_name }}
                   key: MYSQL_ROOT_PASSWORD
 
             - name: MYSQL_DATABASE
               valueFrom:
                 configMapKeyRef:
-                  name: {{ mysql_config_name }}
+                  name: {{ config_name }}
                   key: MYSQL_DATABASE
 
             - name: MYSQL_USER
               valueFrom:
                 configMapKeyRef:
-                  name: {{ mysql_config_name }}
+                  name: {{ config_name }}
                   key: MYSQL_USER
 
             - name: MYSQL_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ mysql_secret_name }}
+                  name: {{ secret_name }}
                   key: MYSQL_PASSWORD
 
           volumeMounts:

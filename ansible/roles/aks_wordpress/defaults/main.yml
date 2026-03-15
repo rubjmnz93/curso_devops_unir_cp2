@@ -1,18 +1,21 @@
-pvc_name: wordpress-pvc
+container_name: wordpress
+image_name: wordpress
+replicas: 1
+
+# Volume configuration
+volume_name: "{{ container_name }}-storage"
+volume_mount_path: /var/www/html
+
+# PCV configuration
+pvc_name: "{{ container_name }}-pvc"
 pvc_storage: 5Gi
 pvc_storage_class: managed-csi
 
-wordpress_secret_name: wordpress-secret
-wordpress_config_name: wordpress-config
-wordpress_database: wordpress
-wordpress_user: wordpress
+# Secret variables
+secret_name: "{{ container_name }}-secret"
 
-container_name: wordpress
-replicas: 1
-image_name: wordpress
-volume_name: wordpress-storage
-volume_mount_path: /var/www/html
-
-wordpress_db_host: mysql
+# Configuration variables
+config_name: "{{ container_name }}-config"
+wordpress_db_host: mysql-service
 wordpress_db_user: wordpress
 container_port: 80

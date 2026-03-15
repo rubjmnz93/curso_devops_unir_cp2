@@ -16,27 +16,37 @@
 
 - name: Login to Azure Container Registry
   containers.podman.podman_login:
-    registry:  "{{ acr_login_server }}"
+    registry:  "{{ acr_server }}"
     username: "{{ acr_name }}"
     password: "{{ acr_password }}"
 
 - name: Pull container image from ACR
   containers.podman.podman_image:
-    name: "{{ acr_login_server }}/{{ image_name }}:{{ image_tag }}"
+    name: "{{ acr_server }}/{{ image_name }}:{{ image_tag }}"
   
 - name: Create directory for volume
   file:
-    path: /opt/{{ image_name }}
+    path: /opt/{{ container_name }}
     state: directory
     mode: '0755'
 
+- name: Copy custom nginx website
+  copy:
+    src: website/
+    dest: /opt/{{ container_name }}/
+    mode: "0644"
+
 - name: Run container
   containers.podman.podman_container:
-    name: "{{ image_name }}"
+    name: "{{ container_name }}"
     image: "{{ image_name }}:{{ image_tag }}"
     state: started
     ports:
       - "{{ container_port }}:80"
     volumes:
-      - "/opt/{{ image_name }}:/usr/share/nginx/html"
+      - "/opt/{{ container_name }}:/usr/share/nginx/html"
     restart_policy: always
+
+- name: Show VM URL
+  debug:
+    msg: "VM is available at http://{{ vm_ip }}:{{ container_port }}"

@@ -1,15 +1,30 @@
-pvc_name: mysql-pvc
+# Container configuration
+container_name: mysql
+image_name: mysql
+replicas: 1
+container_port: 3306
+
+# Volume configuration
+volume_name: "{{ container_name }}-storage"
+volume_mount_path: /var/lib/mysql
+
+# PCV configuration
+pvc_name: "{{ container_name }}-pvc"
 pvc_storage: 5Gi
 pvc_storage_class: managed-csi
 
-mysql_secret_name: mysql-secret
+# Secret variables
+secret_name: "{{ container_name }}-secret"
+
+# Configuration variables
+config_name: "{{ container_name }}-config"
 mysql_config_name: mysql-config
 mysql_database: wordpress
 mysql_user: wordpress
 
-container_name: mysql
-replicas: 1
-image_name: mysql
-volume_name: mysql-storage
-volume_mount_path: /var/lib/mysql
-container_port: 3306
+
+
+
+
+
+
