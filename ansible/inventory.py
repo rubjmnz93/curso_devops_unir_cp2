@@ -36,7 +36,7 @@ def get_inventory():
             "vars": {
                 "ansible_connection": "local",
                 "k8s_namespace": "casopractico2",
-                "kubeconfig_path": "../kubeconfig",
+                "kubeconfig_path": "kubeconfig",
                 "acr_secret_name": "acr-secret",
             }
         },

@@ -1,3 +1,5 @@
+SHELL := /bin/bash
+
 .PHONY: get-key
 
 
@@ -10,15 +12,31 @@ help:
 	@echo "  get-key-tf                 -> Extract private key from Terraform outputs and save to ssh/id_rsa"
 	@echo "  connect-ssh-vm             -> SSH into the VM using the private key from get-key-tf"
 	@echo "  run-ansible-playbook       -> Run Ansible playbook to configure resources"
-	@echo "  test-vm-nginx              -> Test Nginx in VM by printing the URL and doing a curl request"
 
-set-azure-account-id:
+full-deploy: ansible-set-vault-pass create-python-env tf-deploy ansible-run-playbook
+
+create-python-env:
+	python3 -m venv .venv
+	. .venv/bin/activate && pip install -r requirements.txt
+
+ansible-set-vault-pass:
+	@if [ ! -f ansible/.vault_pass ]; then \
+		read -s -p "Enter Ansible vault password: " vault_pass; \
+		echo; \
+		echo $$vault_pass > ansible/.vault_pass; \
+		chmod 600 ansible/.vault_pass; \
+	fi
+
+tf-set-azure-account-id:
 	@echo "subscription_id = \"$$(az account show --query id -o tsv)\"" > terraform/terraform.tfvars
 
-tf-deploy: set-azure-account-id
+tf-init:
+	cd terraform && terraform init
+
+tf-deploy: tf-set-azure-account-id tf-init
 	cd terraform && terraform apply -var-file="terraform.tfvars" --auto-approve
 
-tf-destroy: set-azure-account-id
+tf-destroy: tf-set-azure-account-id
 	cd terraform && terraform destroy -var-file="terraform.tfvars" --auto-approve
 
 get-key-tf:
@@ -33,12 +51,6 @@ connect-ssh-vm: get-key-tf
 	vm_ip=$$(terraform output -raw vm_ip) && \
 	ssh -i ../ssh/id_rsa $${vm_username}@$${vm_ip}
 
-run-ansible-playbook: get-key-tf
+ansible-run-playbook: get-key-tf
 	cd ansible && \
 	ansible-playbook playbook.yml --vault-password-file .vault_pass
-
-test-vm-nginx:
-	cd terraform && \
-	vm_ip=$$(terraform output -raw vm_ip) && \
-	echo "Nginx in VM: http://$${vm_ip}:8080/" && \
-	curl http://$${vm_ip}:8080/
