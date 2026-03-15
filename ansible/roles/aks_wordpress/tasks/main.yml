@@ -1,0 +1,40 @@
+- name: Create Wordpress PVC
+  kubernetes.core.k8s:
+    kubeconfig: "{{ kubeconfig_path }}"
+    state: present
+    definition: "{{ lookup('template', 'pvc.yml.j2') }}"
+
+- name: Create Wordpress secret
+  kubernetes.core.k8s:
+    kubeconfig: "{{ kubeconfig_path }}"
+    state: present
+    definition: "{{ lookup('template', 'secret.yml.j2') }}"
+    
+- name: Create Wordpress configmap
+  kubernetes.core.k8s:
+    kubeconfig: "{{ kubeconfig_path }}"
+    state: present
+    definition: "{{ lookup('template', 'config.yml.j2') }}"
+
+- name: Create Wordpress Deployment
+  kubernetes.core.k8s:
+    kubeconfig: "{{ kubeconfig_path }}"
+    state: present
+    definition: "{{ lookup('template', 'deployment.yml.j2') }}"
+
+- name: Create Wordpress LoadBalancer Service
+  kubernetes.core.k8s:
+    kubeconfig: "{{ kubeconfig_path }}"
+    state: present
+    definition: "{{ lookup('template', 'service.yml.j2') }}"
+
+- name: Get WordPress service information
+  kubernetes.core.k8s_info:
+    kind: Service
+    name: "{{ container_name }}"
+    namespace: "{{ k8s_namespace }}"
+  register: wordpress_service
+
+- name: Show WordPress URL
+  debug:
+    msg: "Wordpress is available at http://{{ wordpress_service.resources[0].status.loadBalancer.ingress[0].ip }}"

@@ -1,0 +1,18 @@
+pvc_name: wordpress-pvc
+pvc_storage: 5Gi
+pvc_storage_class: managed-csi
+
+wordpress_secret_name: wordpress-secret
+wordpress_config_name: wordpress-config
+wordpress_database: wordpress
+wordpress_user: wordpress
+
+container_name: wordpress
+replicas: 1
+image_name: wordpress
+volume_name: wordpress-storage
+volume_mount_path: /var/www/html
+
+wordpress_db_host: mysql
+wordpress_db_user: wordpress
+container_port: 80

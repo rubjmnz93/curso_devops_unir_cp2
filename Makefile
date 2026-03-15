@@ -35,7 +35,7 @@ connect-ssh-vm: get-key-tf
 
 run-ansible-playbook: get-key-tf
 	cd ansible && \
-	ansible-playbook playbook.yml
+	ansible-playbook playbook.yml --vault-password-file .vault_pass
 
 test-vm-nginx:
 	cd terraform && \
