@@ -3,14 +3,14 @@
   roles:
     - acr
 
-- name: Configure Podman host
+- name: Configure Nginx on VM
   hosts: vm
   become: yes
 
   roles:
     - vm
   
-- name: Deploy AKS
+- name: Deploy WordPress on AKS
   hosts: aks
   roles:
     - acr_secret

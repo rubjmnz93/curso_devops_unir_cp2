@@ -16,6 +16,6 @@ secret_name: "{{ container_name }}-secret"
 
 # Configuration variables
 config_name: "{{ container_name }}-config"
-wordpress_db_host: mysql-service
+wordpress_db_host: mysql
 wordpress_db_user: wordpress
 container_port: 80

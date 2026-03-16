@@ -6,12 +6,20 @@ SHELL := /bin/bash
 help:
 	@echo "Available commands:"
 	@echo ""
-	@echo "  set-azure-account-id       -> Set the current Azure subscription ID into terraform/terraform.tfvars"
+	@echo "  help                       -> Show this help message"
+	@echo "  full-deploy                -> Complete deployment: set vault pass, create env, deploy TF, run Ansible"
+	@echo "  create-python-env          -> Create Python virtual environment and install requirements"
+	@echo "  ansible-set-vault-pass     -> Set Ansible vault password if not already set"
+	@echo "  tf-set-azure-account-id    -> Set the current Azure subscription ID into terraform/terraform.tfvars"
+	@echo "  tf-init                    -> Initialize Terraform"
 	@echo "  tf-deploy                  -> Deploy infrastructure using Terraform"
 	@echo "  tf-destroy                 -> Destroy infrastructure using Terraform"
 	@echo "  get-key-tf                 -> Extract private key from Terraform outputs and save to ssh/id_rsa"
 	@echo "  connect-ssh-vm             -> SSH into the VM using the private key from get-key-tf"
-	@echo "  run-ansible-playbook       -> Run Ansible playbook to configure resources"
+	@echo "  ansible-run-playbook       -> Run Ansible playbook to configure resources"
+	@echo "  get-nginx-url              -> Get the URL for the Nginx service deployed on the VM"
+	@echo "  get-wordpress-url          -> Get the URL for the WordPress service deployed on AKS"
+	@echo ""
 
 full-deploy: ansible-set-vault-pass create-python-env tf-deploy ansible-run-playbook
 
@@ -54,3 +62,13 @@ connect-ssh-vm: get-key-tf
 ansible-run-playbook: get-key-tf
 	cd ansible && \
 	ansible-playbook playbook.yml --vault-password-file .vault_pass
+
+get-nginx-url:
+	@cd terraform && \
+	vm_ip=$$(terraform output -raw vm_ip) && \
+	echo "Nginx URL: http://$$vm_ip:8080"
+
+get-wordpress-url:
+	@az aks get-credentials --resource-group cp2-rg --name cp2-aks --overwrite-existing && \
+	wordpress_ip=$$(kubectl get service wordpress -n casopractico2 -o jsonpath='{.status.loadBalancer.ingress[0].ip}') && \
+	echo "WordPress URL: http://$$wordpress_ip"

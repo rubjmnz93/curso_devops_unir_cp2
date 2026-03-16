@@ -30,6 +30,7 @@
 
 - name: Get WordPress service information
   kubernetes.core.k8s_info:
+    kubeconfig: "{{ kubeconfig_path }}"
     kind: Service
     name: "{{ container_name }}"
     namespace: "{{ k8s_namespace }}"
